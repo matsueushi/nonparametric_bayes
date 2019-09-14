@@ -7,8 +7,14 @@ mutable struct KMean
     μs::Array{Float64}
     dist::Float64
     dist_change::Float64
-    KMean(points::Array{Float64}, K::Int64) = new(points, K, zeros(size(points, 1)), zeros(K, size(points, 2)), Inf, Inf)
-end 
+    function KMean(points::Array{Float64}, K::Int64)
+        n_points = size(points, 1)
+        pts = reshape(points, n_points, :)
+        n_dims = size(pts, 2)
+        new(pts, K, zeros(n_points), zeros(K, n_dims), Inf, Inf)
+    end
+end
+
 
 function update!(km::KMean)
     diff_sq = (km.points .- reshape(km.μs', 1, size(km.μs, 2), :)).^2
